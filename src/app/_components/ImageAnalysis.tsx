@@ -1,52 +1,3 @@
-// import SparklesIcon from "../_icons/SparklesIcon";
-// import ImageUpload from "./ImageUpload";
-// import ReloadIcon from "../_icons/ReloadIcon";
-// import { ButtonGroup } from "@/components/ui/button-group";
-// import { Button } from "@/components/ui/button";
-// import FileIcon from "../_icons/FileIcon";
-
-// export default function ImageAnalysis() {
-//   return (
-//     <div className="mt-[24px]">
-//       <div className=" flex justify-between w-[580px]">
-//         <div className="flex gap-2">
-//           <SparklesIcon />
-//           <p className="font-xl font-inter text-black font-semibold">
-//             Image analysis
-//           </p>
-//         </div>
-//         <div>
-//           <ReloadIcon />
-//         </div>
-//       </div>
-
-//       <div>
-//         <p className="text-[#71717A] font-[14px] mt-2">
-//           Upload a food photo, and AI will detect the ingredients.
-//         </p>
-//         <div className="w-[580px] h-[40px] border rounded-[6px] border-[#E4E4E7] flex items-center p-[8px_12px] mt-[8px]">
-//           <ImageUpload />
-//         </div>
-//       </div>
-//       <div className="flex justify-end w-[580px] mt-[8px]">
-//         <ButtonGroup>
-//           <Button>Generate</Button>
-//         </ButtonGroup>
-//       </div>
-
-//       <div className="flex gap-2">
-//         <FileIcon />
-//         <p className="font-xl font-inter text-black font-semibold">
-//           Here is the summary
-//         </p>
-//       </div>
-//       <p className="text-[#71717A] font-[14px] mt-2">
-//         First, enter your image to recognize an ingredients.
-//       </p>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useState } from "react";
@@ -56,6 +7,9 @@ import ReloadIcon from "../_icons/ReloadIcon";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Button } from "@/components/ui/button";
 import FileIcon from "../_icons/FileIcon";
+import Image from "next/image";
+import { Trash2 } from "lucide-react";
+import axios from "axios";
 
 export default function ImageAnalysis() {
   const [file, setFile] = useState<File | null>(null);
@@ -72,14 +26,14 @@ export default function ImageAnalysis() {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:999/upload", {
-        method: "POST",
-        body: formData,
+      const res = await axios.post("http://localhost:999/analyze", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const data = await res.json();
-
-      setSummary(data.description || "No result");
+      console.log(res.data.description);
+      setSummary(res.data.description || "No result");
     } catch (err) {
       console.error(err);
       alert("Failed to analyze image");
@@ -88,9 +42,13 @@ export default function ImageAnalysis() {
     }
   };
 
+  const handleRemove = () => {
+    setFile(null);
+    setPreview(null);
+  };
+
   return (
     <div className="mt-[24px]">
-      {/* Header */}
       <div className="flex justify-between w-[580px]">
         <div className="flex gap-2">
           <SparklesIcon />
@@ -99,14 +57,13 @@ export default function ImageAnalysis() {
         <ReloadIcon />
       </div>
 
-      {/* Upload */}
       <p className="text-[#71717A] text-[14px] mt-2">
-        Upload a food photo, and AI will detect the ingredients.
+        Upload a photo, and AI will detect the ingredients.
       </p>
 
       <div
         className="w-[580px] h-[40px] border rounded-[6px] border-[#E4E4E7]
-                      flex items-center p-[8px_12px] mt-[8px]"
+        flex items-center p-[8px_12px] mt-[8px]"
       >
         <ImageUpload
           file={file}
@@ -116,7 +73,18 @@ export default function ImageAnalysis() {
         />
       </div>
 
-      {/* Generate */}
+      {preview && (
+        <div className="relative w-[257px] h-[187px] rounded-[16px] overflow-hidden mt-4">
+          <Image src={preview} alt="preview" fill className="object-cover" />
+          <button
+            onClick={handleRemove}
+            className="absolute right-3 bottom-3 w-8 h-8 bg-white rounded-md shadow-md flex items-center justify-center hover:bg-gray-100 transition-colors z-10"
+          >
+            <Trash2 className="w-4 h-4 text-gray-600" />
+          </button>
+        </div>
+      )}
+
       <div className="flex justify-end w-[580px] mt-[8px]">
         <ButtonGroup>
           <Button onClick={handleGenerate} disabled={loading}>
@@ -125,7 +93,6 @@ export default function ImageAnalysis() {
         </ButtonGroup>
       </div>
 
-      {/* Result */}
       <div className="flex gap-2 mt-[24px]">
         <FileIcon />
         <p className="font-inter text-black font-semibold">
