@@ -6,8 +6,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function Home() {
   return (
-    <div>
-      <div className="w-[1440px] h-[56px] bg-white p-[16px_48px]">
+    <div className="flex items-center flex-col">
+      <div className="w-[1440px] h-[56px] bg-white p-[16px_48px] ">
         <Header />
       </div>
       <div className="w-[1080px] h-[888px] bg-white flex justify-center">
