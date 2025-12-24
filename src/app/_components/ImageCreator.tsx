@@ -68,12 +68,13 @@ export default function ImageCreator() {
 
       <div className="w-[580px] rounded-[6px] mt-[8px]">
         <Input
-          className="w-[580px] h-[124px]"
+          className="w-[580px] "
           placeholder="Тайлбар"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
       </div>
+
       <div className="flex justify-end w-[580px] mt-[8px]">
         <ButtonGroup>
           <Button onClick={handleGenerate} disabled={loading || !prompt.trim()}>
