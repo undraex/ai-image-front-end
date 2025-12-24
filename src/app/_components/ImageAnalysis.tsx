@@ -10,6 +10,7 @@ import FileIcon from "../_icons/FileIcon";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
+import { BACK_END_URL } from "../_constants";
 
 export default function ImageAnalysis() {
   const [file, setFile] = useState<File | null>(null);
@@ -26,7 +27,7 @@ export default function ImageAnalysis() {
     try {
       setLoading(true);
 
-      const res = await axios.post("http://localhost:999/analyze", formData, {
+      const res = await axios.post(`${BACK_END_URL}/analyze`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
