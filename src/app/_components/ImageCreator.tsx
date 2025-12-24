@@ -49,7 +49,6 @@ export default function ImageCreator() {
 
   return (
     <div className="mt-[24px]">
-      {/* Header */}
       <div className="flex justify-between w-[580px]">
         <div className="flex gap-2">
           <SparklesIcon />
@@ -63,7 +62,6 @@ export default function ImageCreator() {
         </button>
       </div>
 
-      {/* Input */}
       <p className="text-[#71717A] font-[14px] mt-2">
         What image do you want? Describe it briefly.
       </p>
@@ -76,8 +74,6 @@ export default function ImageCreator() {
           onChange={(e) => setPrompt(e.target.value)}
         />
       </div>
-
-      {/* Generate button */}
       <div className="flex justify-end w-[580px] mt-[8px]">
         <ButtonGroup>
           <Button onClick={handleGenerate} disabled={loading || !prompt.trim()}>
@@ -86,7 +82,6 @@ export default function ImageCreator() {
         </ButtonGroup>
       </div>
 
-      {/* Result */}
       <div className="flex gap-2 mt-[24px]">
         <ImageIcon />
         <p className="font-xl font-inter text-black font-semibold">Result</p>

@@ -8,13 +8,17 @@ import FileIcon from "../_icons/FileIcon";
 import { BACK_END_URL } from "../_constants";
 import axios from "axios";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 export default function IngredientRecognition() {
   const [text, setText] = useState("");
   const [generatedText, setGeneratedText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     try {
+      setLoading(true);
+
       const data = await axios.post(`${BACK_END_URL}/recognition`, {
         text: text,
       });
@@ -22,7 +26,13 @@ export default function IngredientRecognition() {
     } catch (err) {
       console.error("Request failed:", err);
     } finally {
+      setLoading(false);
     }
+  };
+
+  const handleReload = () => {
+    setText("");
+    setGeneratedText("");
   };
 
   return (
@@ -34,7 +44,7 @@ export default function IngredientRecognition() {
             Ingredient recognition
           </p>
         </div>
-        <button>
+        <button onClick={handleReload}>
           <ReloadIcon />
         </button>
       </div>
@@ -43,19 +53,30 @@ export default function IngredientRecognition() {
         <p className="text-[#71717A] font-[14px] mt-2">
           Describe the food, and AI will detect the ingredients.
         </p>
-        <div className="w-[580px] rounded-[6px] p-[8px_12px] mt-[8px]">
+        {/* <div className="w-[580px] rounded-[6px] p-[8px_12px] mt-[8px]">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Орц тодорхойлох"
             className="w-full py-2 px-3 border rounded-md min-h-31"
           />
+        </div> */}
+
+        <div className="w-[580px] rounded-[6px] mt-[8px]">
+          <Input
+            className="w-[580px] h-[124px]"
+            placeholder="Орц тодорхойлох"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
         </div>
       </div>
 
       <div className="flex justify-end w-[580px] mt-[8px]">
         <ButtonGroup>
-          <Button onClick={handleGenerate}>Generate</Button>
+          <Button onClick={handleGenerate} disabled={loading || !text.trim()}>
+            {loading ? "Generating..." : "Generate"}
+          </Button>
         </ButtonGroup>
       </div>
 
