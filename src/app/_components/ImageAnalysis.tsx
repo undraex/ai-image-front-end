@@ -17,6 +17,7 @@ export default function ImageAnalysis() {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("");
+  const [error, setError] = useState("");
 
   const handleGenerate = async () => {
     if (!file) return alert("Please upload image");
@@ -26,6 +27,7 @@ export default function ImageAnalysis() {
 
     try {
       setLoading(true);
+      setError("");
 
       const res = await axios.post(`${BACK_END_URL}/analyze`, formData, {
         headers: {
@@ -37,7 +39,16 @@ export default function ImageAnalysis() {
       setSummary(res.data.description || "No result");
     } catch (err) {
       console.error(err);
-      alert("Failed to analyze image");
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.error ||
+            err.response?.data?.details ||
+            err.message ||
+            "Failed to analyze image"
+        );
+      } else {
+        setError("Failed to analyze image");
+      }
     } finally {
       setLoading(false);
     }
@@ -46,6 +57,7 @@ export default function ImageAnalysis() {
   const handleRemove = () => {
     setFile(null);
     setPreview(null);
+    setError("");
   };
 
   return (
@@ -93,6 +105,10 @@ export default function ImageAnalysis() {
           </Button>
         </ButtonGroup>
       </div>
+
+      {error ? (
+        <p className="w-[580px] mt-[8px] text-sm text-red-600">{error}</p>
+      ) : null}
 
       <div className="flex gap-2 mt-[24px]">
         <FileIcon />

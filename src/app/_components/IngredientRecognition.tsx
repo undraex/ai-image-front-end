@@ -14,10 +14,12 @@ export default function IngredientRecognition() {
   const [text, setText] = useState("");
   const [generatedText, setGeneratedText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleGenerate = async () => {
     try {
       setLoading(true);
+      setError("");
 
       const data = await axios.post(`${BACK_END_URL}/recognition`, {
         text: text,
@@ -25,6 +27,16 @@ export default function IngredientRecognition() {
       setGeneratedText(data.data.ingredients);
     } catch (err) {
       console.error("Request failed:", err);
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.error ||
+            err.response?.data?.details ||
+            err.message ||
+            "Request failed"
+        );
+      } else {
+        setError("Request failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -33,6 +45,7 @@ export default function IngredientRecognition() {
   const handleReload = () => {
     setText("");
     setGeneratedText("");
+    setError("");
   };
 
   return (
@@ -79,6 +92,10 @@ export default function IngredientRecognition() {
           </Button>
         </ButtonGroup>
       </div>
+
+      {error ? (
+        <p className="w-[580px] mt-[8px] text-sm text-red-600">{error}</p>
+      ) : null}
 
       <div className="flex gap-2 mt-[24px]">
         <FileIcon />
