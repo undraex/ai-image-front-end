@@ -2,8 +2,8 @@ import AITools from "../_icons/AIToolsIcon";
 
 export default function Header(){
     return(
-        <div>
+        <header className="flex h-[56px] w-full items-center border-b border-[#E5E7EB] bg-white px-[48px]">
             <AITools/>
-        </div>
+        </header>
     )
 }

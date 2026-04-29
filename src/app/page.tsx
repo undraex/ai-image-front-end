@@ -7,10 +7,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 export default function Home() {
   return (
     <div className="flex items-center flex-col">
-      <div className="w-[1440px] h-[56px] bg-white p-[16px_48px] ">
-        <Header />
-      </div>
-      <div className="w-[1080px] h-[888px] bg-white flex justify-center">
+      <Header />
+      <div className="w-[1080px] h-[888px] bg-white flex justify-center pt-[24px]">
         <Tabs defaultValue="image-analysis" className="w-full max-w-[600px]">
           <TabsList>
             <TabsTrigger value="image-analysis">Image analysis</TabsTrigger>
